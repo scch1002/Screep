@@ -30,17 +30,17 @@ const refreshCreeps = () => {
 
   if (!_.some(Game.creeps, (creep: any) => creep.memory.role === 'harvester')) {
     spawn.spawnCreep([WORK,CARRY,MOVE], 'harvester',
-        {memory: {role: 'harvester'}});
+        {memory: {role: 'harvester'} as CreepMemory});
   }
 
   if (!_.some(Game.creeps, (creep: any) => creep.memory.role === 'builder')) {
     spawn.spawnCreep([WORK,CARRY,MOVE], 'builder',
-        {memory: {role: 'builder'}});
+        {memory: {role: 'builder'} as CreepMemory});
   }
 
   if (!_.some(Game.creeps, (creep: any) => creep.memory.role === 'upgrader')) {
     spawn.spawnCreep([WORK,CARRY,MOVE], 'upgrader',
-        {memory: {role: 'upgrader'}});
+        {memory: {role: 'upgrader'} as CreepMemory});
   }
 
   if(spawn.spawning) {

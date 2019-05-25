@@ -1,5 +1,8 @@
 export const harvester = {
-    run: (creep: any) => {
+    run: (creep: Creep) => {
+
+        creep.say("harvest");
+
         if(creep.carry.energy < creep.carryCapacity) {
             const sources = creep.room.find(FIND_SOURCES);
             if(creep.harvest(sources[0]) === ERR_NOT_IN_RANGE) {
