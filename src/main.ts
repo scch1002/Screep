@@ -1,6 +1,7 @@
 import { ErrorMapper } from "utils/ErrorMapper";
 import { builder} from "./roles/builder";
 import { harvester } from "./roles/harvester";
+import { assignTask } from "./roles/taskassign";
 import { upgrader } from "./roles/upgrader";
 
 // When compiling TS to JS and bundling with rollup, the line numbers and file names in error messages change
@@ -8,28 +9,12 @@ import { upgrader } from "./roles/upgrader";
 export const loop = ErrorMapper.wrapLoop(() => {
   console.log(`Current game tick is ${Game.time}`);
 
-  // Automatically delete memory of missing creeps
-  for (const name in Memory.creeps) {
-
-    if (!(name in Game.creeps)) {
-      delete Memory.creeps[name];
-    }
-
     refreshCreeps();
 
     for(let name in Game.creeps) {
       const creep = Game.creeps[name];
-      if(creep.memory.role === 'harvester') {
-        harvester.run(creep);
-      }
-      if(creep.memory.role === 'upgrader') {
-        upgrader.run(creep);
-      }
-      if(creep.memory.role === 'builder') {
-        builder.run(creep);
-      }
+      assignTask(creep);
     }
-  }
 });
 
 const refreshCreeps = () => {
