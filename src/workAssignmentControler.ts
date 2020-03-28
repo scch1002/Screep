@@ -5,6 +5,7 @@ import { upgrader } from "./roles/upgrader";
 
 export const assignWork = () => {
     let correctAssignmentCount = generateWorkTypeCounts(Game.creeps);
+    console.log(JSON.stringify(correctAssignmentCount))
     adjustWorkerAllocation(Game.creeps, correctAssignmentCount);
     directWorkers(Game.creeps)
 }
@@ -23,11 +24,11 @@ const adjustWorkerAllocation = (creeps: any, workAssignments: any) => {
 
     for (let name in creeps) {
         const creep = creeps[name];
-        if (creep.memory.role === 'upgrader' && currentUpgraderCount === workAssignments.upgraderCount) {
+        if (creep.memory.role === 'upgrader' && currentUpgraderCount > workAssignments.upgraderCount) {
             creep.memory.role = 'harvester';
         } else if (creep.memory.role === 'upgrader') {
             currentUpgraderCount++;
-        } else if (creep.memory.role === 'harvester' && currentHarvesterCount === workAssignments.harvesterCount) {
+        } else if (creep.memory.role === 'harvester' && currentHarvesterCount > workAssignments.harvesterCount) {
             creep.memory.role = 'upgrader';
         } else {
             currentHarvesterCount++;
