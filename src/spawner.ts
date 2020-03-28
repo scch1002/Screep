@@ -31,7 +31,7 @@ const haveMaxCreepsBeenGenerated = (creeps: any, room: any) => {
 const cullCreeps = (creeps: any, room: any) => {
     const correctCreepCount = room.find(FIND_SOURCES).length * 6;
     let creepCount = Object.keys(creeps).length;
-    if (correctCreepCount > creepCount) {
+    if (correctCreepCount >= creepCount) {
         return;
     }
 
