@@ -28,13 +28,14 @@ const generateWorkTypeCounts = (creeps: any, room: any) => {
 }
 
 const adjustWorkerAllocation = (creeps: any, workAssignments: any, room: any) => {
+    const creepCount = Object.keys(creeps).length;
     let currentHarvesterCount = 0;
     let currentUpgraderCount = 0;
 
     for (let name in creeps) {
         const creep = creeps[name];
 
-        if (creep.memory.role === 'builder') {
+        if (creep.memory.role === 'builder' && creepCount === 1) {
             creep.memory.role = 'harvester';
         }
 

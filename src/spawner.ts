@@ -22,7 +22,6 @@ export const spawnerCreateCreep = () => {
 
 const haveMaxCreepsBeenGenerated = (creeps: any, room: any) => {
     const creepCount = Object.keys(creeps).length;
-    console.log(creepCount);
     const energySourceCount = room.find(FIND_SOURCES).length;
 
     return creepCount >= energySourceCount * 6;
