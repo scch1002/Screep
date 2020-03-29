@@ -25,7 +25,7 @@ const haveMaxCreepsBeenGenerated = (creeps: any, room: any) => {
     const creepCount = Object.keys(creeps).length;
     const energySourceCount = room.find(FIND_SOURCES).length;
 
-    return creepCount > energySourceCount * 6;
+    return creepCount >= energySourceCount * 6;
 }
 
 const cullCreeps = (creeps: any, room: any) => {
@@ -39,7 +39,7 @@ const cullCreeps = (creeps: any, room: any) => {
         const creep = creeps[name];
         creep.suicide()
         creepCount--;
-        if (creepCount < correctCreepCount) {
+        if (creepCount <= correctCreepCount) {
             break;
         }
     }
