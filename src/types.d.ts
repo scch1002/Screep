@@ -10,7 +10,7 @@ interface CreepMemory {
 }
 
 interface RoomMemory {
-  sources: object[]
+  sources: source[]
 }
 
 interface Memory {
@@ -23,4 +23,8 @@ declare namespace NodeJS {
   interface Global {
     log: any;
   }
+}
+
+interface source {
+  workers: string[]
 }

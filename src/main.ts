@@ -22,7 +22,21 @@ const deleteMemory = () => {
   for (const name in Memory.creeps) {
     if (!Game.creeps[name]) {
       delete Memory.creeps[name];
+      removeCreepFromSourceAssignment(name);
       console.log('Clearing non-existing creep memory:', name);
     }
   }
 };
+
+const removeCreepFromSourceAssignment = (name: string) => {
+  const room = Game.spawns['CS'].room;
+
+  for (let source of room.memory.sources) {
+    for (let worker of source.workers) {
+      if (worker === name) {
+        _.remove(source.workers, (w: string) => w === name)
+      }
+      break;
+    }
+  }
+}
