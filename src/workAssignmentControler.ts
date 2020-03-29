@@ -4,14 +4,23 @@ import { upgrader } from "./roles/upgrader";
 
 
 export const assignWork = () => {
-    let correctAssignmentCount = generateWorkTypeCounts(Game.creeps);
+    const room = Game.spawns['CS'].room;
+    let correctAssignmentCount = generateWorkTypeCounts(Game.creeps, room);
     console.log(JSON.stringify(correctAssignmentCount))
     adjustWorkerAllocation(Game.creeps, correctAssignmentCount);
     directWorkers(Game.creeps)
 }
 
-const generateWorkTypeCounts = (creeps: any) => {
+const generateWorkTypeCounts = (creeps: any, room: any) => {
     const creepCount = Object.keys(creeps).length;
+
+    if (haveMaxCreepsBeenGenerated(creeps, room) && room.energyCapacityAvailable === room.energyAvailable) {
+        return {
+            harvesterCount: creepCount * 0,
+            upgraderCount: creepCount * 1
+        }
+    }
+
     return {
         harvesterCount: creepCount * .6,
         upgraderCount: creepCount * .4
@@ -24,11 +33,11 @@ const adjustWorkerAllocation = (creeps: any, workAssignments: any) => {
 
     for (let name in creeps) {
         const creep = creeps[name];
-        if (creep.memory.role === 'upgrader' && currentUpgraderCount > workAssignments.upgraderCount) {
+        if (creep.memory.role === 'upgrader' && currentUpgraderCount >= workAssignments.upgraderCount) {
             creep.memory.role = 'harvester';
         } else if (creep.memory.role === 'upgrader') {
             currentUpgraderCount++;
-        } else if (creep.memory.role === 'harvester' && currentHarvesterCount > workAssignments.harvesterCount) {
+        } else if (creep.memory.role === 'harvester' && currentHarvesterCount >= workAssignments.harvesterCount) {
             creep.memory.role = 'upgrader';
         } else {
             currentHarvesterCount++;
@@ -77,3 +86,9 @@ const canHarvest = (room: Room) => room.find(FIND_SOURCES)
     .filter(f => f.energy > 100)
     .length > 0 && room.energyCapacityAvailable > 0;
 
+const haveMaxCreepsBeenGenerated = (creeps: any, room: any) => {
+    const creepCount = Object.keys(creeps).length;
+    const energySourceCount = room.find(FIND_SOURCES).length;
+
+    return creepCount >= energySourceCount * 6;
+}
