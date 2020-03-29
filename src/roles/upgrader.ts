@@ -18,11 +18,9 @@ export const upgrader = {
                 creep.moveTo(room.controller, { visualizePathStyle: { stroke: '#ffffff' } });
             }
         } else {
-            if (creep.carry.energy < creep.carryCapacity) {
-                const source = Game.getObjectById(creep.memory.assignedSource) as Source;
-                if (creep.harvest(source) === ERR_NOT_IN_RANGE) {
-                    creep.moveTo(source);
-                }
+            const sources = creep.room.find(FIND_SOURCES);
+            if (creep.harvest(sources[0]) === ERR_NOT_IN_RANGE) {
+                creep.moveTo(sources[0], { visualizePathStyle: { stroke: '#ffaa00' } });
             }
         }
     }
