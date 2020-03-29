@@ -7,7 +7,7 @@ export const assignWork = () => {
     const room = Game.spawns['CS'].room;
     let correctAssignmentCount = generateWorkTypeCounts(Game.creeps, room);
     console.log(JSON.stringify(correctAssignmentCount))
-    adjustWorkerAllocation(Game.creeps, correctAssignmentCount);
+    adjustWorkerAllocation(Game.creeps, correctAssignmentCount, room);
     directWorkers(Game.creeps)
 }
 
@@ -27,12 +27,17 @@ const generateWorkTypeCounts = (creeps: any, room: any) => {
     }
 }
 
-const adjustWorkerAllocation = (creeps: any, workAssignments: any) => {
+const adjustWorkerAllocation = (creeps: any, workAssignments: any, room: any) => {
     let currentHarvesterCount = 0;
     let currentUpgraderCount = 0;
 
     for (let name in creeps) {
         const creep = creeps[name];
+
+        if (creep.memory.role === 'builder') {
+            creep.memory.role = 'harvester';
+        }
+
         if (creep.memory.role === 'upgrader' && currentUpgraderCount >= workAssignments.upgraderCount) {
             creep.memory.role = 'harvester';
         } else if (creep.memory.role === 'upgrader') {
@@ -41,6 +46,18 @@ const adjustWorkerAllocation = (creeps: any, workAssignments: any) => {
             creep.memory.role = 'upgrader';
         } else {
             currentHarvesterCount++;
+        }
+    }
+
+    if (!canBuild(room) || isBuilderPresent(creeps)) {
+        return;
+    }
+
+    for (let name in creeps) {
+        const creep = creeps[name];
+        if (creep.memory.role === 'upgrader') {
+            creep.memory.role = 'builder';
+            break;
         }
     }
 }
@@ -91,4 +108,15 @@ const haveMaxCreepsBeenGenerated = (creeps: any, room: any) => {
     const energySourceCount = room.find(FIND_SOURCES).length;
 
     return creepCount >= energySourceCount * 6;
+}
+
+const isBuilderPresent = (creeps: any) => {
+    for (let name in creeps) {
+        const creep = creeps[name];
+        if (creep.memory.role === 'builder') {
+            return true;
+        }
+    }
+
+    return false;
 }

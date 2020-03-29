@@ -4,8 +4,13 @@
 interface CreepMemory {
   role: string;
   type: string;
+  assignedSource: string;
   building: boolean;
   upgrading: boolean;
+}
+
+interface RoomMemory {
+  sources: object[]
 }
 
 interface Memory {
